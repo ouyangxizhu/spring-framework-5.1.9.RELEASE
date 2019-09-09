@@ -50,6 +50,7 @@ import org.springframework.core.io.Resource;
  * @deprecated as of Spring 3.1 in favor of {@link DefaultListableBeanFactory} and
  * {@link XmlBeanDefinitionReader}
  */
+//XmlBeanFactory在DefaultListableBeanFactory基础上添加了XmlBeanDefinitionReader，实现了个性化的BeanDefinitionReader
 @Deprecated
 @SuppressWarnings({"serial", "all"})
 public class XmlBeanFactory extends DefaultListableBeanFactory {

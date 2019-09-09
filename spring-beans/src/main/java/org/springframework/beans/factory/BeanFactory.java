@@ -114,6 +114,7 @@ import org.springframework.lang.Nullable;
  * @see org.springframework.beans.factory.support.RootBeanDefinition#getDestroyMethodName
  */
 //这个接口只关注获取bean相关的方法，不关心怎么创建bean
+//定义获取bean及bean的各种属性
 public interface BeanFactory {
 
 	/**

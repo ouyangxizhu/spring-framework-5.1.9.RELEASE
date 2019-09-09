@@ -115,7 +115,8 @@ import org.springframework.util.StringUtils;
  * @see #getBean
  * @see #resolveDependency
  */
-//这个类继承或实现了所有的bean工厂，用这个
+//这个类继承或实现了所有的bean工厂，是Spring注册及加载bean的默认实现。
+//综合各接口功能，主要是对bean注册后的处理
 @SuppressWarnings("serial")
 public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFactory
 		implements ConfigurableListableBeanFactory, BeanDefinitionRegistry, Serializable {

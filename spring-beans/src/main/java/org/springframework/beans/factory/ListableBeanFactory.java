@@ -56,6 +56,7 @@ import org.springframework.lang.Nullable;
  * @see BeanFactoryUtils
  */
 //生产可列表化的bean，比如属性里面有Map和List等
+//根据各种条件获取bean配置清单
 public interface ListableBeanFactory extends BeanFactory {
 
 	/**

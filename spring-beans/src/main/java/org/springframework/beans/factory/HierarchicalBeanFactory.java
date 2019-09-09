@@ -32,6 +32,7 @@ import org.springframework.lang.Nullable;
  * @see org.springframework.beans.factory.config.ConfigurableBeanFactory#setParentBeanFactory
  */
 //生产有层级结构，有继承关系的类
+//在BeanFactory基础上增加了对ParentBeanFactory的支持
 public interface HierarchicalBeanFactory extends BeanFactory {
 
 	/**
