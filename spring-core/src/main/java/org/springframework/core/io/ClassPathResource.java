@@ -62,6 +62,7 @@ public class ClassPathResource extends AbstractFileResolvingResource {
 	 * @see java.lang.ClassLoader#getResourceAsStream(String)
 	 * @see org.springframework.util.ClassUtils#getDefaultClassLoader()
 	 */
+	//传入xml配置文件路径，根据其内容创建resource对象，该对象包含BeanDefinition信息
 	public ClassPathResource(String path) {
 		this(path, (ClassLoader) null);
 	}

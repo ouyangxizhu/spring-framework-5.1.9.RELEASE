@@ -37,6 +37,8 @@ import org.springframework.lang.Nullable;
  * @see org.springframework.beans.factory.support.RootBeanDefinition
  * @see org.springframework.beans.factory.support.ChildBeanDefinition
  */
+//bean定义，bean对象在ioc容器中是以BeanDefinition描述的（保存配置信息，将配置信息转化为BeanDefinition）
+//只是描述，不是真正的bean
 public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 
 	/**

@@ -144,9 +144,11 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 				}
 			}
 		}
-
+		//解析bean定义之前，进行自定义解析，增强解析过程的可扩展性
 		preProcessXml(root);
+		//从根对象开始，进行解析
 		parseBeanDefinitions(root, this.delegate);
+		//解析bean定义之后，进行自定义解析，增强解析过程的可扩展性
 		postProcessXml(root);
 
 		this.delegate = parent;
@@ -165,17 +167,24 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 	 * "import", "alias", "bean".
 	 * @param root the DOM root element of the document
 	 */
+	//使用spring的bean规则从Document的根元素开始进行bean定义的Document对象
 	protected void parseBeanDefinitions(Element root, BeanDefinitionParserDelegate delegate) {
+		//bean定义的Document对象使用spring默认的命名空间
 		if (delegate.isDefaultNamespace(root)) {
+			//获取bean定义的Document对象的所有子节点
 			NodeList nl = root.getChildNodes();
 			for (int i = 0; i < nl.getLength(); i++) {
 				Node node = nl.item(i);
+				//获取Document节点是xml元素节点
 				if (node instanceof Element) {
 					Element ele = (Element) node;
+					//bean定义的Document对象使用spring默认的命名空间
 					if (delegate.isDefaultNamespace(ele)) {
+						//使用spring的bean规则解析元素节点
 						parseDefaultElement(ele, delegate);
 					}
 					else {
+						//没有使用spring默认的xml命名空间，使用用户自定义的解析规则解析节点
 						delegate.parseCustomElement(ele);
 					}
 				}
@@ -185,17 +194,21 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 			delegate.parseCustomElement(root);
 		}
 	}
-
+	//使用spring的bean定义规则进行解析
 	private void parseDefaultElement(Element ele, BeanDefinitionParserDelegate delegate) {
+		//导入解析
 		if (delegate.nodeNameEquals(ele, IMPORT_ELEMENT)) {
 			importBeanDefinitionResource(ele);
 		}
+		//别名解析
 		else if (delegate.nodeNameEquals(ele, ALIAS_ELEMENT)) {
 			processAliasRegistration(ele);
 		}
+		//bean解析
 		else if (delegate.nodeNameEquals(ele, BEAN_ELEMENT)) {
 			processBeanDefinition(ele, delegate);
 		}
+		//beans解析
 		else if (delegate.nodeNameEquals(ele, NESTED_BEANS_ELEMENT)) {
 			// recurse
 			doRegisterBeanDefinitions(ele);

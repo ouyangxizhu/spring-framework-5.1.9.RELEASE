@@ -55,6 +55,7 @@ import org.springframework.lang.Nullable;
  * @see HierarchicalBeanFactory
  * @see BeanFactoryUtils
  */
+//生产可列表化的bean，比如属性里面有Map和List等
 public interface ListableBeanFactory extends BeanFactory {
 
 	/**

@@ -154,6 +154,7 @@ public class DefaultResourceLoader implements ResourceLoader {
 		if (location.startsWith("/")) {
 			return getResourceByPath(location);
 		}
+		//classpath*
 		else if (location.startsWith(CLASSPATH_URL_PREFIX)) {
 			return new ClassPathResource(location.substring(CLASSPATH_URL_PREFIX.length()), getClassLoader());
 		}
@@ -165,6 +166,7 @@ public class DefaultResourceLoader implements ResourceLoader {
 			}
 			catch (MalformedURLException ex) {
 				// No URL -> resolve as resource path.
+				//没有classpath和url调用自己的
 				return getResourceByPath(location);
 			}
 		}

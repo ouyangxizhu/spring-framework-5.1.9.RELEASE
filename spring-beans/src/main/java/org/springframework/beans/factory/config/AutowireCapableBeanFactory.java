@@ -59,6 +59,7 @@ import org.springframework.lang.Nullable;
  * @see org.springframework.beans.factory.config.ConfigurableListableBeanFactory
  * @see org.springframework.context.ApplicationContext#getAutowireCapableBeanFactory()
  */
+//用于隐式声明的类的创建，即标注注解的
 public interface AutowireCapableBeanFactory extends BeanFactory {
 
 	/**
