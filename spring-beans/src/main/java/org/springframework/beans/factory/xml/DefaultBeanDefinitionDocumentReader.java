@@ -93,6 +93,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 	@Override
 	public void registerBeanDefinitions(Document doc, XmlReaderContext readerContext) {
 		this.readerContext = readerContext;
+		//参数为获取的root对象
 		doRegisterBeanDefinitions(doc.getDocumentElement());
 	}
 
@@ -125,10 +126,12 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 		// the new (child) delegate with a reference to the parent for fallback purposes,
 		// then ultimately reset this.delegate back to its original (parent) reference.
 		// this behavior emulates a stack of delegates without actually necessitating one.
+		//专门处理解析
 		BeanDefinitionParserDelegate parent = this.delegate;
 		this.delegate = createDelegate(getReaderContext(), root, parent);
 
 		if (this.delegate.isDefaultNamespace(root)) {
+			//处理profile属性，用来定义生产或者开发环境等多套配置，
 			String profileSpec = root.getAttribute(PROFILE_ATTRIBUTE);
 			if (StringUtils.hasText(profileSpec)) {
 				String[] specifiedProfiles = StringUtils.tokenizeToStringArray(
@@ -144,11 +147,13 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 				}
 			}
 		}
-		//解析bean定义之前，进行自定义解析，增强解析过程的可扩展性
+		//模板方法模式
+
+		//解析bean定义之前，进行自定义解析，增强解析过程的可扩展性，如果需要，留给子类实现
 		preProcessXml(root);
 		//从根对象开始，进行解析
 		parseBeanDefinitions(root, this.delegate);
-		//解析bean定义之后，进行自定义解析，增强解析过程的可扩展性
+		//解析bean定义之后，进行自定义解析，增强解析过程的可扩展性，如果需要，留给子类实现
 		postProcessXml(root);
 
 		this.delegate = parent;
@@ -169,7 +174,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 	 */
 	//使用spring的bean规则从Document的根元素开始进行bean定义的Document对象
 	protected void parseBeanDefinitions(Element root, BeanDefinitionParserDelegate delegate) {
-		//bean定义的Document对象使用spring默认的命名空间
+		//对beans的处理，bean定义的Document对象使用spring默认的命名空间
 		if (delegate.isDefaultNamespace(root)) {
 			//获取bean定义的Document对象的所有子节点
 			NodeList nl = root.getChildNodes();
@@ -180,11 +185,13 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 					Element ele = (Element) node;
 					//bean定义的Document对象使用spring默认的命名空间
 					if (delegate.isDefaultNamespace(ele)) {
-						//使用spring的bean规则解析元素节点
+						//使用spring的bean规则解析元素节点（解析bean）
+						//<bean id = "" class = ""/>
 						parseDefaultElement(ele, delegate);
 					}
 					else {
-						//没有使用spring默认的xml命名空间，使用用户自定义的解析规则解析节点
+						//没有使用spring默认的xml命名空间，使用用户自定义的解析规则解析节点（解析bean）
+						//比如自定义的<tx:annotation-driven/>
 						delegate.parseCustomElement(ele);
 					}
 				}

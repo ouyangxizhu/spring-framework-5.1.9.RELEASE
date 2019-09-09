@@ -42,6 +42,7 @@ import org.springframework.util.Assert;
  * @see FileSystemResource
  * @see UrlResource
  */
+//InputStream资源
 public class InputStreamResource extends AbstractResource {
 
 	private final InputStream inputStream;

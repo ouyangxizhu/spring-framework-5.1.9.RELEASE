@@ -172,6 +172,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	 */
 	public AbstractAutowireCapableBeanFactory() {
 		super();
+		//忽略给定依赖接口的自动装配功能，典型应用方式是通过其它方式解析Application上下文注册依赖，类似于BeanFactory通过BeanFactoryAware进行注入
 		ignoreDependencyInterface(BeanNameAware.class);
 		ignoreDependencyInterface(BeanFactoryAware.class);
 		ignoreDependencyInterface(BeanClassLoaderAware.class);

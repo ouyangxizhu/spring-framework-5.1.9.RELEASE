@@ -76,17 +76,20 @@ public class DelegatingEntityResolver implements EntityResolver {
 		this.schemaResolver = schemaResolver;
 	}
 
-
+	//systemId代表网址，publicId代表PUBLIC声明，若是xsd格式，该值为null
 	@Override
 	@Nullable
 	public InputSource resolveEntity(@Nullable String publicId, @Nullable String systemId)
 			throws SAXException, IOException {
 
 		if (systemId != null) {
+
 			if (systemId.endsWith(DTD_SUFFIX)) {
+				//如果是DTD，从这里开始解析，当前路径下找
 				return this.dtdResolver.resolveEntity(publicId, systemId);
 			}
 			else if (systemId.endsWith(XSD_SUFFIX)) {
+				//从META_INF/Spring.schemas文件中找
 				return this.schemaResolver.resolveEntity(publicId, systemId);
 			}
 		}

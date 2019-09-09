@@ -40,6 +40,7 @@ import org.springframework.util.Assert;
  * @see InputStreamResource
  * @see org.springframework.mail.javamail.MimeMessageHelper#addAttachment(String, InputStreamSource)
  */
+//Byte数组资源
 public class ByteArrayResource extends AbstractResource {
 
 	private final byte[] byteArray;
