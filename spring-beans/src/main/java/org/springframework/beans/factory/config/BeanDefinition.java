@@ -38,7 +38,9 @@ import org.springframework.lang.Nullable;
  * @see org.springframework.beans.factory.support.ChildBeanDefinition
  */
 //bean定义，bean对象在ioc容器中是以BeanDefinition描述的（保存配置信息，将配置信息转化为BeanDefinition）
-//只是描述，不是真正的bean
+//配置的字段，对应该类的属性
+//只是描述，不是真正的bean，该类会注册到BeanDefinitionRegistry中，以map形式存储，后续操作直接从BeanDefinitionRegistry中读取配置信息
+//该接口有抽象实现类AbstractBeanDefinition，之后又有三个RootBeanDefinition、ChildBeanDefinition、GenericBeanDefinition默认实现类，分别对应父bean，子bean，和普通bean
 public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 
 	/**

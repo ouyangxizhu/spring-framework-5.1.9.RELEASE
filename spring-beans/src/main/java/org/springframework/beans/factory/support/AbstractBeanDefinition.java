@@ -62,6 +62,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	 * Constant for the default scope name: {@code ""}, equivalent to singleton
 	 * status unless overridden from a parent bean definition (if applicable).
 	 */
+
 	public static final String SCOPE_DEFAULT = "";
 
 	/**
@@ -140,11 +141,14 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	@Nullable
 	private volatile Object beanClass;
 
+	//bean的作用范围，对应bean属性scope
 	@Nullable
 	private String scope = SCOPE_DEFAULT;
 
+	//是否是抽象的，对应bean属性abstract
 	private boolean abstractFlag = false;
 
+	//是否延迟加载，对应bean属性的lazy-init
 	private boolean lazyInit = false;
 
 	private int autowireMode = AUTOWIRE_NO;
