@@ -878,9 +878,14 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 
 		Assert.hasText(beanName, "Bean name must not be empty");
 		Assert.notNull(beanDefinition, "BeanDefinition must not be null");
-		//校验
+		//1. 校验
 		if (beanDefinition instanceof AbstractBeanDefinition) {
 			try {
+				/**
+				 * 注册前的最后一次校验，这里的校验不同于之前的xml文件校验，
+				 * 主要是对与AbstrBeanDefinition属性中的methodOverrides校验，
+				 * 校验methodOverrides是否与工厂方法并存或者methodOverrides对应的方法根本不存在
+				 */
 				((AbstractBeanDefinition) beanDefinition).validate();
 			}
 			catch (BeanDefinitionValidationException ex) {
@@ -889,9 +894,11 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			}
 		}
 
+		//beanDefinitionMap是全局属性，存在并发情况，用了ConcurrentHashMap，所以这里没有同步
 		BeanDefinition existingDefinition = this.beanDefinitionMap.get(beanName);
-		//检查重复，看是否允许覆盖，这里用了ConcurrentHashMap，所以这里没有同步
+		//检查重复，看是否允许覆盖，处理注册已经注册的beanName情况
 		if (existingDefinition != null) {
+			//2. 如果对应的beanName已经注册且在配置中配置了beanName不允许被覆盖，则抛出异常
 			if (!isAllowBeanDefinitionOverriding()) {
 				throw new BeanDefinitionOverrideException(beanName, beanDefinition, existingDefinition);
 			}
@@ -932,8 +939,10 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 				}
 			}
 			else {
+				//3. 注册BeanDefinition，即加入map缓存
 				// Still in startup registration phase
 				this.beanDefinitionMap.put(beanName, beanDefinition);
+				//记录beanName
 				this.beanDefinitionNames.add(beanName);
 				removeManualSingletonName(beanName);
 			}
@@ -941,7 +950,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 		}
 
 		if (existingDefinition != null || containsSingleton(beanName)) {
-			//重置所有已经注册过的BeanDefinition缓存
+			//4. 重置所有已经注册过的BeanDefinition缓存
 			resetBeanDefinition(beanName);
 		}
 	}
