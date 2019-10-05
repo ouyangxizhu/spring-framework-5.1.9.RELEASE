@@ -174,6 +174,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 	 */
 	//使用spring的bean规则从Document的根元素开始进行bean定义的Document对象
 	protected void parseBeanDefinitions(Element root, BeanDefinitionParserDelegate delegate) {
+		//根据名称空间判断是不是自定义标签
 		//对beans的处理，bean定义的Document对象使用spring默认的命名空间
 		if (delegate.isDefaultNamespace(root)) {
 			//获取bean定义的Document对象的所有子节点
@@ -198,6 +199,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 			}
 		}
 		else {
+			//解析自定义标签
 			delegate.parseCustomElement(root);
 		}
 	}
@@ -296,7 +298,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 						"Failed to import bean definitions from relative location [" + location + "]", ele, ex);
 			}
 		}
-		//6. 解析后进行监听器激活处理
+		//6. 解析后进行监听器激活处理，通知监听器，解析完成
 		Resource[] actResArray = actualResources.toArray(new Resource[0]);
 		getReaderContext().fireImportProcessed(location, actResArray, extractSource(ele));
 	}
