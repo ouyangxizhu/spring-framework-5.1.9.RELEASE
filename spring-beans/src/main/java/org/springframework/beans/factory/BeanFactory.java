@@ -165,6 +165,9 @@ public interface BeanFactory {
 	 * Return an instance, which may be shared or independent, of the specified bean.
 	 * <p>Allows for specifying explicit constructor arguments / factory method arguments,
 	 * overriding the specified default arguments (if any) in the bean definition.
+	 *
+	 * 这个方法表示在获取bean的时候用户不但可以指定bean的名称还可以指定bean所对应类的构造函数或者工厂方法参数，主要用于静态工厂方法的调用
+	 *
 	 * @param name the name of the bean to retrieve
 	 * @param args arguments to use when creating a bean instance using explicit arguments
 	 * (only applied when creating a new instance as opposed to retrieving an existing one)

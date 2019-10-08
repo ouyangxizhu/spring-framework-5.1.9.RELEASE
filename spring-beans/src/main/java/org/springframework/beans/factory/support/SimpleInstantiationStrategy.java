@@ -59,9 +59,12 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
 
 
 	//使用初始化策略实例化bean对象
+	//本来可以使用最简单的反射策略，但是spring没这么做
 	@Override
 	public Object instantiate(RootBeanDefinition bd, @Nullable String beanName, BeanFactory owner) {
 		// Don't override the class with CGLIB if no overrides.
+		//如果有需要覆盖或者动态替换的方法，则当然使用cglib进行动态代理，因为可以在创建代理的同时将动态方法织入类中
+		//如果没有需要动态改变的方法，为了方便直接反射就可以了
 		//如果bean定义中没有方法覆盖，不需要CGLIB父类类中的方法
 		if (!bd.hasMethodOverrides()) {
 			Constructor<?> constructorToUse;
@@ -91,7 +94,8 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
 			}
 			return BeanUtils.instantiateClass(constructorToUse);
 		}
-		else {//如果bean定义中有方法覆盖，用CGLIB父类类中的方法
+		else {
+			//如果bean定义中有方法覆盖，用CGLIB父类类中的方法
 			// Must generate CGLIB subclass.
 			return instantiateWithMethodInjection(bd, beanName, owner);
 		}
