@@ -514,6 +514,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			//给BeanPostProcessors一个机会来返回代理来代替真正的实例
 			//应用初始化前的后处理器，也是实例化的前置处理，解析指定bean是否存在初始化前的短路操作
 			Object bean = resolveBeforeInstantiation(beanName, mbdToUse);
+			//经过前置处理后反悔的结果如果不为空，那么会直接略过后续的bean的创建而直接返回结果，AOP就是介于这里判断的
 			if (bean != null) {
 				return bean;
 			}
@@ -1109,13 +1110,19 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	@Nullable
 	protected Object resolveBeforeInstantiation(String beanName, RootBeanDefinition mbd) {
 		Object bean = null;
+		//如果尚未被解析
 		if (!Boolean.FALSE.equals(mbd.beforeInstantiationResolved)) {
 			// Make sure bean class is actually resolved at this point.
 			if (!mbd.isSynthetic() && hasInstantiationAwareBeanPostProcessors()) {
 				Class<?> targetType = determineTargetType(beanName, mbd);
 				if (targetType != null) {
+					//bean的实例化前调用，就是将AbstractBeanDefinition转换为BeanWrapper前的处理。给子类一个修改BeanDefinition的机会，返回的bean可能不是我们认为的bean了，是一个代理了
+					//对后处理器中的所有InstantiationAwareBeanPostProcessor类型的后处理器进行postProcessBeforeInstantiation方法
 					bean = applyBeanPostProcessorsBeforeInstantiation(targetType, beanName);
 					if (bean != null) {
+						//spring中的规则是在bean的初始化后尽可能保证将注册的后处理器的postProcessAfterInitialization方法应用到该bean中
+						//如果返回的bean不为空，那么变不会再次经历普通bean的创建过程，所以只能在这里应用后处理器的postProcessAfterInitialization方法
+						//BeanPostProcessor的postProcessAfterInitialization方法调用
 						bean = applyBeanPostProcessorsAfterInitialization(bean, beanName);
 					}
 				}
@@ -1139,8 +1146,10 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	@Nullable
 	protected Object applyBeanPostProcessorsBeforeInstantiation(Class<?> beanClass, String beanName) {
 		for (BeanPostProcessor bp : getBeanPostProcessors()) {
+			//如果是InstantiationAwareBeanPostProcessor类型的子类
 			if (bp instanceof InstantiationAwareBeanPostProcessor) {
 				InstantiationAwareBeanPostProcessor ibp = (InstantiationAwareBeanPostProcessor) bp;
+				//调用相应的回调方法
 				Object result = ibp.postProcessBeforeInstantiation(beanClass, beanName);
 				if (result != null) {
 					return result;
