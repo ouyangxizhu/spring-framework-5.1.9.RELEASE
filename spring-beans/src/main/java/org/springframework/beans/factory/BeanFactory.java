@@ -140,7 +140,7 @@ public interface BeanFactory {
 	 * @throws NoSuchBeanDefinitionException if there is no bean with the specified name
 	 * @throws BeansException if the bean could not be obtained
 	 */
-	//根据bean的name从IOC容器中获取bean
+	//根据bean的name从IOC容器中获取bean,实现该方法的实现类有5个，是在org.springframework.beans.factory.support.AbstractBeanFactory类中实现的
 	Object getBean(String name) throws BeansException;
 
 	/**

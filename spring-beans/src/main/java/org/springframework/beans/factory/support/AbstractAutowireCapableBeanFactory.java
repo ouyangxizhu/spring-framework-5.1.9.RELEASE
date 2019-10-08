@@ -487,6 +487,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		// clone the bean definition in case of a dynamically resolved Class
 		// which cannot be stored in the shared merged bean definition.
 		//判断当前的bean是否可以被实例化，及是否可以通过当前的类加载器加载
+		//锁定class，根据设置的class属性或者根据className来解析class
 		Class<?> resolvedClass = resolveBeanClass(mbd, beanName);
 		if (resolvedClass != null && !mbd.hasBeanClass() && mbd.getBeanClassName() != null) {
 			mbdToUse = new RootBeanDefinition(mbd);
@@ -495,6 +496,10 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 		// Prepare method overrides.
 		//校验和准备bean中的方法覆盖
+		//验证及准备覆盖的方法
+		//对override属性进行标记和验证
+		//spring中的配置有lookup-method和replace-method的，这两个配置最后都同一存放到BeanDefinition中的methodOverrides属性里
+		//这个函数的操作其实就是针对于这两个配置的
 		try {
 			mbdToUse.prepareMethodOverrides();
 		}
@@ -506,6 +511,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		try {
 			// Give BeanPostProcessors a chance to return a proxy instead of the target bean instance.
 			//如果配置了初始化前和初始化后的处理器，则试图返回指定bean的代理对象，默认CGLIB
+			//给BeanPostProcessors一个机会来返回代理来代替真正的实例
+			//应用初始化前的后处理器，也是实例化的前置处理，解析指定bean是否存在初始化前的短路操作
 			Object bean = resolveBeforeInstantiation(beanName, mbdToUse);
 			if (bean != null) {
 				return bean;
@@ -517,6 +524,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 
 		try {
+			//真正的创建bean的方法
 			Object beanInstance = doCreateBean(beanName, mbdToUse, args);
 			if (logger.isTraceEnabled()) {
 				logger.trace("Finished creating instance of bean '" + beanName + "'");

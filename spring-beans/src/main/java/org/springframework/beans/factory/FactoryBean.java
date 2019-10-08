@@ -48,6 +48,12 @@ import org.springframework.lang.Nullable;
  * synchronization other than for purposes of lazy initialization within the
  * FactoryBean itself (or the like).
  *
+ * 如果按照配置的方式实例化bean，要是bean实例化的过程很复杂，可以采用编码的方式（简单灵活），
+ * 可以通过实现该接口定制实例化bean的逻辑
+ *
+ * 如果getBean(beanName)方法里面的beanName是FactoryBean的实现类，返回的是FactoryBean#getObject()方法的结果
+ * 相当于代理了getBean()方法，如果想返回FactoryBean本身需要写成getBean("&beanName")
+ *
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @since 08.03.2003
@@ -71,6 +77,9 @@ public interface FactoryBean<T> {
 	 * will not throw a FactoryBeanNotInitializedException in this case anymore.
 	 * FactoryBean implementations are encouraged to throw
 	 * FactoryBeanNotInitializedException themselves now, as appropriate.
+	 *
+	 * 返回由FactoryBean创建的实例，如果isSingleton()返回true，该实例会放到spring容器中单实例缓存池中
+	 *
 	 * @return an instance of the bean (can be {@code null})
 	 * @throws Exception in case of creation errors
 	 * @see FactoryBeanNotInitializedException
@@ -96,6 +105,8 @@ public interface FactoryBean<T> {
 	 * @return the type of object that this FactoryBean creates,
 	 * or {@code null} if not known at the time of the call
 	 * @see ListableBeanFactory#getBeansOfType
+	 *
+	 * 返回创建bean的类型
 	 */
 	@Nullable
 	Class<?> getObjectType();
@@ -124,6 +135,7 @@ public interface FactoryBean<T> {
 	 * @return whether the exposed object is a singleton
 	 * @see #getObject()
 	 * @see SmartFactoryBean#isPrototype()
+	 * 判断是不是单例的
 	 */
 	default boolean isSingleton() {
 		return true;

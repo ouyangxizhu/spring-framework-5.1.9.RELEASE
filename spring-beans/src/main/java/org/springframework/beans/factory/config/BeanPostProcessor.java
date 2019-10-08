@@ -72,6 +72,9 @@ public interface BeanPostProcessor {
 	 * <p>This callback will also be invoked after a short-circuiting triggered by a
 	 * {@link InstantiationAwareBeanPostProcessor#postProcessBeforeInstantiation} method,
 	 * in contrast to all other BeanPostProcessor callbacks.
+	 *
+	 * bean后处理器
+	 *
 	 * <p>The default implementation returns the given {@code bean} as-is.
 	 * @param bean the new bean instance
 	 * @param beanName the name of the bean
