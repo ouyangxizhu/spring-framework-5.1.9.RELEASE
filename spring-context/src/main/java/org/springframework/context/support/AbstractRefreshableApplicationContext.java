@@ -128,14 +128,20 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 			closeBeanFactory();
 		}
 		try {
-			//创建ioc容器
+			//1. 创建默认的"DefaultListableBeanFactory"ioc容器（是容器的基础）
 			DefaultListableBeanFactory beanFactory = createBeanFactory();
+			//2. 指定序列化id。为了序列化指定id，如果需要的话，让这个BeanFactory从id反序列化到BeanFactory对象
 			beanFactory.setSerializationId(getId());
-			//对ioc容器进行定制化，如设置启动参数，开启注解的自动装配等。
+			//3. 定制BeanFactory。设置相关属性，包括是否允许覆盖同名称的不同定义的对象以及循环依赖
+			//DefaultListableBeanFactory类当中有一个 autowireCandidateResolver属性，初始化为 new SimpleAutowireCandidateResolver();
+			//这个属性就是用来设置@Autowired和@Qualifier注解解析器QualifierAnnotationAutowireCandidateResolver
+			//对ioc容器进行定制化，如设置启动参数。
 			customizeBeanFactory(beanFactory);
+			//4. 加载BeanDefinition初始化DocumentReader，并进行xml文件读取及解析
 			//调用载入bean定义的方法，这里还是委派模式，当前是抽象方法，具体方法交给子类实现
 			loadBeanDefinitions(beanFactory);
 			synchronized (this.beanFactoryMonitor) {
+				//5. 使用全局变量记录BeanFactory类实例
 				this.beanFactory = beanFactory;
 			}
 		}
@@ -226,9 +232,16 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 	 * @see DefaultListableBeanFactory#setAllowEagerClassLoading
 	 */
 	protected void customizeBeanFactory(DefaultListableBeanFactory beanFactory) {
+		//这里的属性只进行了空判断，若是不为空要设置的话需要子类覆盖这个方法
+
+
+		//如果属性allowBeanDefinitionOverriding不为空，设置给BeanFactory对象相应的属性
+		//此属性的含义：是否允许覆盖同名称的不同定义的对象
 		if (this.allowBeanDefinitionOverriding != null) {
 			beanFactory.setAllowBeanDefinitionOverriding(this.allowBeanDefinitionOverriding);
 		}
+		//如果属性allowCircularReferences不为空，设置给BeanFactory对象相应的属性
+		//此属性的含义：是否允许bean之间存在循环依赖
 		if (this.allowCircularReferences != null) {
 			beanFactory.setAllowCircularReferences(this.allowCircularReferences);
 		}

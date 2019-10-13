@@ -1515,6 +1515,8 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	 * @param beanDefinition the bean definition that the value comes from
 	 * @return the resolved value
 	 * @see #setBeanExpressionResolver
+	 * 完成SPEL语言表达式的解析，解析过程在expression包内
+	 * 主要是咋解析依赖注入bean的时候，以及在完成bean的初始化和属性获取后进行填充的时候
 	 */
 	@Nullable
 	protected Object evaluateBeanDefinitionString(@Nullable String value, @Nullable BeanDefinition beanDefinition) {

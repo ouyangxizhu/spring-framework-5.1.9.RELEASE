@@ -139,8 +139,10 @@ public class ClassPathXmlApplicationContext extends AbstractXmlApplicationContex
 			throws BeansException {
 
 		super(parent);
+		//可以设置为数组
 		setConfigLocations(configLocations);
 		if (refresh) {
+			//解析和功能实现都在这，这个函数是在org.springframework.context.support.AbstractApplicationContext.refresh实现的
 			refresh();
 		}
 	}
