@@ -80,6 +80,7 @@ final class InstantiationModelAwarePointcutAdvisorImpl
 	private Boolean isAfterAdvice;
 
 
+	//封装过程只是简单的将信息封装在类的实例中，所有信息单纯的赋值，在实例初始化富哦城中还完成了对于增强其的初始化。
 	public InstantiationModelAwarePointcutAdvisorImpl(AspectJExpressionPointcut declaredPointcut,
 			Method aspectJAdviceMethod, AspectJAdvisorFactory aspectJAdvisorFactory,
 			MetadataAwareAspectInstanceFactory aspectInstanceFactory, int declarationOrder, String aspectName) {
@@ -110,6 +111,7 @@ final class InstantiationModelAwarePointcutAdvisorImpl
 			// A singleton aspect.
 			this.pointcut = this.declaredPointcut;
 			this.lazy = false;
+			//根据注解中的信息初始化对应的增强器（比如@Before和@After标签的增强位置不同）
 			this.instantiatedAdvice = instantiateAdvice(this.declaredPointcut);
 		}
 	}
